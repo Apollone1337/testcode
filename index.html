@@ -265,9 +265,7 @@
 
         sliders.forEach(selector => {
             new Swiper(selector, {
-                slidesPerView: 'auto',
                 centeredSlides: true,
-                spaceBetween: 10,
                 loop: true,
                 loopedSlides: 4, // Обязательно для корректной работы loop + auto
                 slideToClickedSlide: true, // При клике на боковой слайд он встанет в центр
@@ -286,6 +284,19 @@
                     type: 'bullets',
                     clickable: true,
                 },
+                // Адаптивные настройки (breakpoints)
+                breakpoints: {
+                    // Настройки для мобильных (ширина >= 320px)
+                    320: {
+                        slidesPerView: 'auto',
+                        spaceBetween: 5
+                    },
+                    // Настройки для планшетов и десктопов (ширина >= 768px)
+                    768: {
+                        slidesPerView: 'auto', // Автоматическая ширина (как было раньше)
+                        spaceBetween: 10
+                    }
+                }
             });
         });
     </script>

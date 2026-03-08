@@ -14,6 +14,11 @@ body {
     overflow-x: hidden;
 }
 
+/* Глобальная настройка для корректного расчета ширины с учетом отступов */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 .container {
     width: 100%;
     max-width: 480px;
@@ -402,18 +407,17 @@ body {
     display: flex;
     align-items: center;
     justify-content: center; /* Центрируем текст */
-    width: 100%;
+    width: auto; /* Автоматическая ширина, чтобы работали отступы */
     max-width: 764px;
     height: 60px;
-    margin: 0 auto; /* Центрирование */
     background: var(--gold);
     color: var(--bg-color);
     border-radius: 15px;
     text-decoration: none;
     font-weight: 700;
     font-size: 16px;
-    padding: 0 20px;
-    box-sizing: border-box;
+    padding: 0 65px; /* Увеличили отступы, чтобы текст не налезал на иконки */
+    margin: 0 auto; /* Центрирование */
     position: relative;
     overflow: hidden; /* Чтобы блик не вылезал за границы */
     position: relative; /* Для абсолютного позиционирования иконок */
@@ -576,6 +580,7 @@ body {
     line-height: 34px;
     text-align: center;
     margin: 0 0 30px;
+    padding: 0 15px; /* Добавляем отступы, чтобы текст не прилипал к краям на мобильном */
 }
 
 .messengers-row {
@@ -642,32 +647,46 @@ body {
 /* ======================================== */
 @media (max-width: 768px) {
     .carousel-background {
-        width: 100%;
-        border-radius: 0;
+        width: auto;
+        margin-left: 5px;
+        margin-right: 5px;
+        border-radius: 20px;
         padding: 30px 0;
     }
+
+    /* Добавляем отступы для кнопки консультации на мобильных */
+    .care-cta-button {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
     
+    .swiper {
+        overflow: hidden !important;
+    }
+
     .swiper-container {
         width: 100%;
     }
     
     .swiper-slide {
-        width: 100%; /* Одна картинка на весь экран */
-        height: 240px;
-        border-radius: 0;
+        width: 80%;
+        height: auto;
+        aspect-ratio: 3 / 2;
+        border-radius: 15px;
     }
 
-    .swiper-slide img {
-        border-radius: 0;
-        transform: scale(1);
-        opacity: 1;
-        filter: grayscale(0%);
-    }
-
-    /* Скрываем стрелки навигации на мобильных */
+    /* Возвращаем стрелки навигации на мобильных */
     .swiper-button-next,
     .swiper-button-prev {
-        display: none !important;
+        display: flex !important;
+        width: 35px !important; /* Увеличили на ~15% */
+        height: 35px !important;
+        top: 60% !important; /* Опускаем еще ниже, чтобы попасть в центр фото */
+    }
+
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+        font-size: 14px !important; /* Чуть увеличили стрелочку */
     }
     
     .main-title {
@@ -678,6 +697,7 @@ body {
     .description {
         font-size: 18px;
         line-height: 26px;
+        padding: 0 10px; /* Чтобы длинный текст не прилипал */
     }
     
     .partners-grid {
@@ -685,7 +705,51 @@ body {
     }
 }
 
-@media (min-width: 1920px) {
+/* Добавляем стиль для планшетов (между мобилкой и ноутбуком) */
+@media (min-width: 769px) and (max-width: 1023px) {
+    .container {
+        max-width: 720px; /* Оптимальная ширина для планшета */
+    }
+    
+    /* Логика как на мобильном: скрываем лишнее, резиновая ширина */
+    .swiper {
+        overflow: hidden !important;
+    }
+
+    .swiper-slide {
+        width: 80%;
+        height: auto;
+        aspect-ratio: 3 / 2;
+    }
+
+    /* Стрелки как на мобильном */
+    .swiper-button-next,
+    .swiper-button-prev {
+        width: 35px !important;
+        height: 35px !important;
+        top: 60% !important;
+    }
+
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+        font-size: 14px !important;
+    }
+}
+
+/* Добавляем промежуточный стиль для ноутбуков (от 1024px) */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 900px;
+    }
+    
+    .swiper-slide {
+        width: 750px; /* Увеличили, чтобы заполнить фон как на ПК */
+        height: 420px;
+    }
+}
+
+/* Расширяем стиль больших мониторов (включая 1600x900 и 1920x1080) */
+@media (min-width: 1440px) {
     .swiper-slide {
         width: 770px;
         height: 430px;

@@ -4,22 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KOCHI•ART | Ландшафт</title>
+    <meta name="author" content="KOCHI ART">
+    <meta name="copyright" content="KOCHI ART, 2026">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Lobster&family=Pacifico&family=Roboto&family=Source+Sans+Pro:wght@200&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Manrope:wght@200;300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <!-- HEADER -->
-        <header class="profile">
-            <img src="images/avatar.jpg" alt="Аватар" class="avatar">
-            <h1 class="main-title">高知 KOCHI•ART</h1>
-            <p class="description">прогрессивные ландшафты</p>
-            <p class="slogan">«Вид из окна меняет сознание»</p>
-        </header>
-    </div>
+    <header class="profile">
+        <img src="images/avatar.jpg" alt="Аватар" class="avatar">
+        <h1 class="main-title">高知 KOCHI•ART</h1>
+        <p class="description">прогрессивные ландшафты</p>
+        <p class="slogan">«Вид из окна меняет сознание»</p>
+    </header>
 
     <div class="header-divider">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -27,11 +26,9 @@
         </svg>
     </div>
 
-        <!-- ОБЩИЙ ФОН ДЛЯ ВСЕХ КАРУСЕЛЕЙ -->
-        <div class="carousel-background">
+    <main class="main-grid">
             
-            <!-- КАРУСЕЛЬ 1: ПРОЕКТИРОВАНИЕ -->
-            <section class="service-section" id="services">
+            <section class="service-section service-card" id="services">
                 <div class="carousel-header">
                     <h2 class="block-title">ПРОЕКТИРОВАНИЕ<br>ЧАСТНЫХ И ОБЩЕСТВЕННЫХ<br>ПРОСТРАНСТВ</h2>
                     <div class="separator">•</div>
@@ -53,8 +50,7 @@
                 </div>
             </section>
 
-            <!-- КАРУСЕЛЬ 2: БЛАГОУСТРОЙСТВО -->
-            <section class="service-section">
+            <section class="service-section service-card">
                 <div class="carousel-header">
                     <h2 class="block-title">БЛАГОУСТРОЙСТВО</h2>
                     <div class="separator">•</div>
@@ -75,8 +71,7 @@
                 </div>
             </section>
 
-            <!-- КАРУСЕЛЬ 3: УХОД -->
-            <section class="service-section">
+            <section class="service-section service-card">
                 <div class="carousel-header">
                     <h2 class="block-title">УХОД</h2>
                     <div class="separator">•</div>
@@ -97,8 +92,7 @@
                 </div>
             </section>
 
-            <!-- СЛУЖБА ЗАБОТЫ (Текст перенесен на фон) -->
-            <section class="service-section">
+            <section class="service-section care-card">
                 <div class="separator">•</div>
                 <h2 class="care-title">СЛУЖБА ЗАБОТЫ</h2>
                 
@@ -108,141 +102,123 @@
                     <p class="care-feature">приоритетное обслуживание садов постоянных клиентов</p>
                 </div>
 
-                <div class="header-divider care-divider-line">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </div>
-
                 <p class="care-cta-text">Получите консультацию по<br>вашему саду уже сейчас</p>
 
                 <a href="https://t.me/k_irina_dd" class="care-cta-button">
-                    <div class="care-button-icon">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295l.213-3.053 5.56-5.022c.242-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
-                        </svg>
-                    </div>
-                    <span>Получить консультацию</span>
-                    <div class="care-button-arrow">›</div>
+                    Получить консультацию
                 </a>
             </section>
 
-        </div>
-        <!-- КОНЕЦ ОБЩЕГО ФОНА -->
+    </main>
 
-    <!-- РАЗДЕЛИТЕЛЬ -->
     <div class="header-divider" style="margin-top: 30px;">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
     </div>
 
-    <!-- ПОРЯДОК СОТРУДНИЧЕСТВА -->
-    <h2 class="cooperation-title">ПОРЯДОК СОТРУДНИЧЕСТВА</h2>
+    <div class="section-wrapper">
+        <h2 class="cooperation-title">ПОРЯДОК СОТРУДНИЧЕСТВА</h2>
 
     <div class="cooperation-list">
         <div class="cooperation-item">
             <div class="coop-number">1</div>
-            <div class="coop-content">
+            <div class="coop-text">
                 <div class="coop-name">Бриф</div>
                 <div class="coop-desc">Задачи, пожелания клиентов</div>
             </div>
         </div>
         <div class="cooperation-item">
             <div class="coop-number">2</div>
-            <div class="coop-content">
+            <div class="coop-text">
                 <div class="coop-name">Анализ объекта</div>
                 <div class="coop-desc">Оценка потенциальной возможности благоустройства</div>
             </div>
         </div>
         <div class="cooperation-item">
             <div class="coop-number">3</div>
-            <div class="coop-content">
+            <div class="coop-text">
                 <div class="coop-name">Концепция</div>
                 <div class="coop-desc">Пространственно-планировочное предложение в планах, схемах, визуализациях</div>
             </div>
         </div>
         <div class="cooperation-item">
             <div class="coop-number">4</div>
-            <div class="coop-content">
+            <div class="coop-text">
                 <div class="coop-name">Укрупненная смета</div>
                 <div class="coop-desc">Примерный расчет материалов</div>
             </div>
         </div>
         <div class="cooperation-item">
             <div class="coop-number">5</div>
-            <div class="coop-content">
+            <div class="coop-text">
                 <div class="coop-name">Вынос проекта в натуру</div>
                 <div class="coop-desc">Выбор подрядчиков и поставщиков. Детальная смета</div>
             </div>
         </div>
         <div class="cooperation-item">
             <div class="coop-number">6</div>
-            <div class="coop-content">
+            <div class="coop-text">
                 <div class="coop-name">Благоустройство</div>
                 <div class="coop-desc">Планирование грунта, посадка растений, монтаж бордюров, отсыпка инертными материалами, укладка газона</div>
             </div>
         </div>
     </div>
 
-    <!-- НАШИ ПАРТНЁРЫ -->
-    <div class="carousel-background partners-block">
+    <div class="partners-block section-wrapper">
         <h2 class="partners-title">НАШИ ПАРТНЁРЫ</h2>
         
         <div class="partners-grid">
             <div class="partner-item">
                 <div class="partner-name">ORGANICA</div>
-                <div class="partner-desc">автоматические системы полива</div>
+                <div class="partner-desc">Автоматические системы полива</div>
             </div>
             <div class="partner-item">
                 <div class="partner-name">Садовый центр Веры Глуховой</div>
-                <div class="partner-desc">посадочный материал</div>
+                <div class="partner-desc">Посадочный материал</div>
             </div>
             <div class="partner-item">
                 <div class="partner-name">Садовый центр Дизайн Флора</div>
-                <div class="partner-desc">посадочный материал</div>
+                <div class="partner-desc">Посадочный материал</div>
             </div>
             <div class="partner-item">
                 <div class="partner-name">Садовый центр Флора ДД</div>
-                <div class="partner-desc">посадочный материал</div>
+                <div class="partner-desc">Посадочный материал</div>
             </div>
             <div class="partner-item">
                 <div class="partner-name">МореКам</div>
-                <div class="partner-desc">натуральный камень</div>
+                <div class="partner-desc">Натуральный камень</div>
             </div>
             <div class="partner-item">
                 <div class="partner-name">SVETHOLL</div>
-                <div class="partner-desc">интерьерное и экстерьерное освещение</div>
+                <div class="partner-desc">Интерьерное и экстерьерное освещение</div>
             </div>
         </div>
     </div>
 
-        <!-- КОНТАКТЫ И ПОДВАЛ -->
-        <h2 class="questions-title">ЕСТЬ ВОПРОСЫ?!</h2>
-        <p class="answer-text">мы ответим</p>
+        <div class="section-wrapper">
+            <div class="contacts-block">
+                <h2 class="questions-title">ЕСТЬ ВОПРОСЫ?!</h2>
+                <p class="answer-text">Мы всегда на связи и готовы обсудить ваш будущий сад</p>
 
-        <div class="messengers-row">
-            <a href="https://t.me/k_irina_dd" class="messenger-btn">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295l.213-3.053 5.56-5.022c.242-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
-                </svg>
-            </a>
-            <a href="https://wa.me/79176158055" class="messenger-btn">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                </svg>
-            </a>
-        </div>
+                <div class="messengers-row">
+                    <a href="https://t.me/k_irina_dd" class="messenger-btn" title="Telegram">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295l.213-3.053 5.56-5.022c.242-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+                        </svg>
+                    </a>
+                    <a href="https://wa.me/79176158055" class="messenger-btn" title="WhatsApp">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                        </svg>
+                    </a>
+                </div>
 
-        <a href="tel:+79176158055" class="care-cta-button call-button">
-            <div class="care-button-icon">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.49-5.15-3.8-6.62-6.63l1.97-1.57c.26-.29.35-.69.24-1.01a17.502 17.502 0 01-.56-3.53c0-.54-.45-.99-.99-.99H4.19C3.65 3.28 3 3.92 3 4.72c0 8.61 6.96 15.57 15.57 15.57.8 0 1.44-.65 1.44-1.19V16.37c0-.55-.45-.99-.99-.99z"/>
-                </svg>
+                <a href="tel:+79176158055" class="care-cta-button call-button">
+                    Позвонить
+                </a>
             </div>
-            <span>Позвонить</span>
-            <div class="care-button-arrow">›</div>
-        </a>
+        </div>
 
         <div class="header-divider">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -257,47 +233,63 @@
             <span>Ульяновская область</span>
         </div>
 
-        <a href="https://t.me/rkotoff" class="designer-credit">Designed by @rkotoff</a>
+        <a href="https://devrkotoff.ru" target="_blank" class="designer-credit">© <span class="year"></span> Devrkotoff Studios. All rights reserved.</a>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        // Массив классов твоих слайдеров
         const sliders = ['.mySwiper', '.mySwiper2', '.mySwiper3'];
 
         sliders.forEach(selector => {
             new Swiper(selector, {
                 centeredSlides: true,
                 loop: true,
-                loopedSlides: 4, // Обязательно для корректной работы loop + auto
-                slideToClickedSlide: true, // При клике на боковой слайд он встанет в центр
-                grabCursor: true, // Курсор-рука для удобства
-                observer: true, // Обновляет слайдер при изменении элементов
-                observeParents: true, // Обновляет слайдер при изменении родительских блоков
-                watchSlidesProgress: true, // Следит за прогрессом для корректных анимаций
-                roundLengths: true, // Округляет значения, чтобы текст и фото не размывались
+                loopedSlides: 4,
+                slideToClickedSlide: true,
+                grabCursor: true,
+                observer: true,
+                observeParents: true,
+                watchSlidesProgress: true,
+                roundLengths: true,
                 navigation: {
                     nextEl: `${selector} .swiper-button-next`,
                     prevEl: `${selector} .swiper-button-prev`,
                 },
                 pagination: {
-                    // Ищем пагинацию, которая идет сразу после слайдера
                     el: `${selector} + .swiper-pagination-outer`,
                     type: 'bullets',
                     clickable: true,
                 },
-                // Адаптивные настройки (breakpoints)
                 breakpoints: {
-                    // Настройки для мобильных (ширина >= 320px)
                     320: {
                         slidesPerView: 'auto',
                         spaceBetween: 5
                     },
-                    // Настройки для планшетов и десктопов (ширина >= 768px)
                     768: {
-                        slidesPerView: 'auto', // Автоматическая ширина (как было раньше)
+                        slidesPerView: 'auto',
                         spaceBetween: 10
                     }
                 }
             });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const year = new Date().getFullYear();
+            document.querySelectorAll('.year').forEach(el => {
+                el.textContent = year;
+            });
+        });
+
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        document.addEventListener('dragstart', event => event.preventDefault());
+
+        document.addEventListener('keydown', function(e) {
+            if (
+                e.keyCode == 123 ||
+                (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) ||
+                (e.ctrlKey && e.keyCode == 85)
+            ) {
+                e.preventDefault();
+            }
         });
     </script>
 </body>

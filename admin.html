@@ -192,6 +192,12 @@
                         <button class="action-btn upload-btn upload-img-btn" data-input="file-avatar" data-slider="avatar-url">Загрузить новую</button>
                         <div class="image-preview" id="preview-avatar" style="min-height: auto;"></div>
                     </div>
+                    <div class="form-group" style="border-top: 1px solid var(--border-color); padding-top: 20px;">
+                        <label>Фавикон (Иконка вкладки браузера)</label>
+                        <input type="file" id="file-favicon" accept="image/*">
+                        <button class="action-btn upload-btn upload-img-btn" data-input="file-favicon" data-slider="favicon-url">Загрузить фавикон</button>
+                        <div class="image-preview" id="preview-favicon" style="min-height: auto;"></div>
+                    </div>
                     <div class="form-group"><label>Заголовок (H1)</label><input type="text" id="hero-title"></div>
                     <div class="form-group"><label>Описание</label><input type="text" id="hero-desc"></div>
                     <div class="form-group"><label>Слоган</label><input type="text" id="hero-slogan"></div>
@@ -441,6 +447,12 @@
                 if (d['avatar-url']) {
                     document.getElementById('preview-avatar').innerHTML = `<img src="${d['avatar-url']}">`;
                 }
+                if (d['favicon-url']) {
+                    document.getElementById('preview-favicon').innerHTML = `<div class="preview-wrapper" draggable="true" data-src="${d['favicon-url']}">
+                        <img src="${d['favicon-url']}">
+                        <button type="button" class="delete-media-btn" onclick="this.parentElement.remove(); markUnsaved();" title="Удалить">&times;</button>
+                    </div>`;
+                }
 
                 // Шапка
                 setV('hero-title', '高知 KOCHI•ART');
@@ -548,7 +560,10 @@
                 return cont ? Array.from(cont.children).map(child => child.dataset.src || child.src).filter(Boolean) : [];
             };
 
-            let mainData = { 'avatar-url': getPhotos('preview-avatar')[0] || '' };
+        let mainData = { 
+            'avatar-url': getPhotos('preview-avatar')[0] || '',
+            'favicon-url': getPhotos('preview-favicon')[0] || ''
+        };
             ids.forEach(id => {
                 const el = document.getElementById(id);
                 if(el) mainData[id] = el.value;
@@ -609,7 +624,7 @@
                     
                     // Добавляем картинки на экран без немедленного сохранения в базу
                     const container = document.getElementById(inputId.replace('file-', 'preview-'));
-                    if(sliderKey === 'avatar-url') container.innerHTML = '';
+                if(sliderKey === 'avatar-url' || sliderKey === 'favicon-url') container.innerHTML = '';
                     
                     urls.forEach(url => {
                         container.insertAdjacentHTML('beforeend', `<div class="preview-wrapper" draggable="true" data-src="${url}">

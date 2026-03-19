@@ -323,6 +323,15 @@
                         const av = document.getElementById('main-avatar'); 
                         if(av) { av.src = md['avatar-url']; av.style.display = 'block'; }
                     }
+                    if (md['favicon-url']) {
+                        let link = document.querySelector("link[rel~='icon']");
+                        if (!link) {
+                            link = document.createElement('link');
+                            link.rel = 'icon';
+                            document.head.appendChild(link);
+                        }
+                        link.href = md['favicon-url'];
+                    }
 
                     // Главный экран и Слайдеры
                     setHTML('.main-title', 'hero-title');

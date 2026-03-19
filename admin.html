@@ -452,6 +452,14 @@
                         <img src="${d['favicon-url']}">
                         <button type="button" class="delete-media-btn" onclick="this.parentElement.remove(); markUnsaved();" title="Удалить">&times;</button>
                     </div>`;
+                    
+                    let link = document.querySelector("link[rel~='icon']");
+                    if (!link) {
+                        link = document.createElement('link');
+                        link.rel = 'icon';
+                        document.head.appendChild(link);
+                    }
+                    link.href = d['favicon-url'];
                 }
 
                 // Шапка
@@ -631,6 +639,16 @@
                             <img src="${url}">
                             <button type="button" class="delete-media-btn" onclick="this.parentElement.remove(); markUnsaved();" title="Удалить">&times;</button>
                         </div>`);
+                        
+                        if (sliderKey === 'favicon-url') {
+                            let link = document.querySelector("link[rel~='icon']");
+                            if (!link) {
+                                link = document.createElement('link');
+                                link.rel = 'icon';
+                                document.head.appendChild(link);
+                            }
+                            link.href = url;
+                        }
                     });
 
                     fileInput.value = '';

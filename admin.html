@@ -1,0 +1,655 @@
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Админ-панель | KOCHI•ART</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #2A2F2B;
+            --card-bg: #343A35;
+            --text-main: #EAE7E2;
+            --text-muted: #949995;
+            --gold: #B0935B;
+            --gold-hover: #d4b578;
+            --border-color: rgba(255,255,255,0.08);
+            --sidebar-width: 280px;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Экран авторизации */
+        .full-center {
+            display: flex; width: 100vw; height: 100vh;
+            justify-content: center; align-items: center;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            position: absolute; top: 0; left: 0; z-index: 1000;
+            background-color: var(--bg-color);
+        }
+        .login-container {
+            background: var(--card-bg); padding: 50px;
+            border: 1px solid var(--border-color); border-top: 3px solid var(--gold);
+            border-radius: 8px; width: 100%; max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .login-container h1 { margin-top: 0; margin-bottom: 30px; font-size: 28px; text-align: center; color: var(--gold); font-family: 'Cormorant Garamond', serif;}
+        
+        .dashboard-layout { display: flex; width: 100vw; height: 100vh; }
+        .hidden { display: none !important; }
+
+        /* Сайдбар */
+        .sidebar { width: var(--sidebar-width); background-color: var(--card-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; flex-shrink: 0; }
+        .sidebar-header { height: 85px; display: flex; align-items: center; justify-content: center; padding: 0 20px; border-bottom: 1px solid var(--border-color); }
+        .sidebar-logo { font-family: 'Cormorant Garamond', serif; color: var(--gold); font-size: 24px; letter-spacing: 0.05em; }
+        .sidebar-nav { flex: 1; padding: 20px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; }
+        .nav-btn { background: transparent; border: none; color: var(--text-muted); text-align: left; padding: 14px 20px; border-radius: 6px; font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 400; cursor: pointer; transition: all 0.2s ease; }
+        .nav-btn:hover { background: rgba(255, 255, 255, 0.03); color: var(--text-main); }
+        .nav-btn.active { background: var(--gold); color: var(--bg-color); font-weight: 600; }
+        .sidebar-footer { padding: 20px; border-top: 1px solid var(--border-color); }
+        .logout-btn { width: 100%; background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); padding: 12px; border-radius: 4px; cursor: pointer; transition: 0.3s; }
+        .logout-btn:hover { border-color: #ff6b6b; color: #ff6b6b; }
+
+        /* Основной контент */
+        .main-content { flex: 1; overflow-y: auto; background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+        .top-bar { height: 85px; display: flex; justify-content: space-between; align-items: center; background: var(--bg-color); padding: 0 50px; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        #top-category-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; color: var(--gold); margin: 0; letter-spacing: 0.05em; }
+        .top-bar-right { display: flex; align-items: center; gap: 20px; }
+        #save-status { font-size: 14px; color: var(--text-muted); font-style: italic; }
+        .tab-content-wrapper { padding: 40px 50px 100px; }
+        .tab-pane { display: none; width: 100%; animation: fadeIn 0.4s ease forwards; }
+        .tab-pane.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Формы */
+        .form-card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 30px; border-radius: 8px; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group:last-child { margin-bottom: 0; }
+        label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;}
+        input[type="text"], input[type="password"], textarea { width: 100%; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border-color); color: var(--text-main); padding: 14px 16px; border-radius: 4px; font-family: 'Manrope', sans-serif; font-size: 15px; transition: border-color 0.3s; }
+        textarea { resize: vertical; min-height: 80px; }
+        input:focus, textarea:focus { outline: none; border-color: var(--gold); }
+        input[type="file"] { font-size: 14px; margin-bottom: 10px; color: var(--text-muted); }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .mini-card { background: rgba(0,0,0,0.15); padding: 20px; border-radius: 6px; border: 1px solid var(--border-color); cursor: grab; transition: transform 0.2s; }
+        .mini-card:active { cursor: grabbing; }
+        .mini-card.dragging, .preview-wrapper.dragging { opacity: 0.5; transform: scale(0.95); border: 2px dashed var(--gold); }
+        .mini-card input, .mini-card textarea { cursor: text; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .drag-handle { color: var(--gold); font-size: 24px; user-select: none; line-height: 1; opacity: 0.8; }
+        
+        .save-btn, .action-btn { background: var(--gold); color: var(--bg-color); border: none; padding: 16px 30px; font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 15px; border-radius: 4px; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 10px; justify-content: center; }
+        .save-btn:hover, .action-btn:hover { background: var(--gold-hover); transform: translateY(-2px); }
+        .save-btn:disabled, .action-btn:disabled { background: #555; cursor: not-allowed; transform: none; color: #999; }
+        .upload-btn { padding: 10px 20px; font-size: 13px; }
+        
+        .image-preview { display: flex; gap: 15px; margin-top: 15px; flex-wrap: wrap; background: rgba(0,0,0,0.15); padding: 15px; border-radius: 4px; border: 1px dashed var(--border-color); min-height: 120px; align-items: flex-start;}
+        .image-preview img { width: 140px; height: 90px; object-fit: cover; border: 1px solid var(--gold); border-radius: 4px; display: block; }
+        .video-preview { width: 140px; height: 90px; background: rgba(0,0,0,0.4); border: 1px solid var(--gold); border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; text-align: center; padding: 10px; word-break: break-all; color: var(--text-main); position: relative; box-sizing: border-box; }
+        .video-preview::before { content: '🎥'; font-size: 24px; margin-bottom: 5px; }
+        .preview-wrapper { position: relative; display: inline-block; cursor: grab; transition: transform 0.2s; border-radius: 4px; }
+        .preview-wrapper:active { cursor: grabbing; }
+        .delete-media-btn { position: absolute; top: -8px; right: -8px; background: #ff4757; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 16px; line-height: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); z-index: 10; transition: transform 0.2s; padding: 0; }
+        .delete-media-btn:hover { transform: scale(1.15); background: #ff6b81; }
+        .loader { font-size: 13px; color: #949995; align-self: center; margin: auto; }
+        
+        /* Адаптив для админки */
+        @media (max-width: 1024px) {
+            :root { --sidebar-width: 240px; }
+            .top-bar { padding: 0 30px; }
+            .tab-content-wrapper { padding: 30px; }
+            .grid-2 { display: flex; flex-direction: column; gap: 15px; }
+            .grid-cards { display: flex; flex-direction: column; gap: 15px; }
+        }
+        @media (max-width: 768px) {
+            .dashboard-layout { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
+            .sidebar-header { height: 70px; display: none; } /* Скроем лого на мобильных для экономии места */
+            .sidebar-nav { flex-direction: row; overflow-x: auto; padding: 10px 15px; gap: 10px; }
+            .sidebar-nav::-webkit-scrollbar { display: none; }
+            .nav-btn { white-space: nowrap; padding: 10px 15px; font-size: 14px; text-align: center; }
+            .sidebar-footer { padding: 10px 15px; border-top: none; }
+            .logout-btn { padding: 8px; font-size: 13px; }
+            
+            .main-content { overflow-x: hidden; }
+            .top-bar { flex-direction: column; height: auto; padding: 15px 20px; gap: 15px; position: static; text-align: center; }
+            .top-bar-right { flex-direction: column; width: 100%; gap: 10px; }
+            #top-category-title { font-size: 24px; }
+            #global-save-btn { width: 100%; padding: 12px; }
+            
+            .tab-content-wrapper { padding: 20px 15px 100px; }
+            .form-card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ЭКРАН ВХОДА -->
+    <div id="login-section" class="full-center">
+        <div class="login-container">
+            <h1>Вход в систему</h1>
+            <div class="form-group">
+                <label>Email админа</label>
+                <input type="text" id="email" placeholder="admin@domain.com">
+            </div>
+            <div class="form-group">
+                <label>Пароль</label>
+                <input type="password" id="password" placeholder="••••••••">
+            </div>
+            <button id="login-btn" class="save-btn" style="width: 100%;">Войти</button>
+        </div>
+    </div>
+
+    <!-- ДАШБОРД -->
+    <div class="dashboard-layout hidden" id="dashboard-section">
+        
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">KOCHI•ART Admin</div>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-target="tab-hero">Шапка сайта</button>
+                <button class="nav-btn" data-target="tab-carousels">Карусели (Услуги)</button>
+                <button class="nav-btn" data-target="tab-care">Служба заботы</button>
+                <button class="nav-btn" data-target="tab-coop">Сотрудничество</button>
+                <button class="nav-btn" data-target="tab-partners">Партнеры</button>
+                <button class="nav-btn" data-target="tab-questions">Вопросы и Футер</button>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="logout-btn" class="logout-btn">Выйти из панели</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            
+            <div class="top-bar">
+                <h2 id="top-category-title">Шапка сайта</h2>
+                <div class="top-bar-right">
+                    <span id="save-status"></span>
+                    <button id="global-save-btn" class="save-btn" onclick="saveAllData()">Сохранить все</button>
+                </div>
+            </div>
+
+            <div class="tab-content-wrapper">
+            <!-- 1. ШАПКА -->
+            <section id="tab-hero" class="tab-pane active">
+                <div class="form-card">
+                    <div class="form-group">
+                        <label>Аватарка профиля</label>
+                        <input type="file" id="file-avatar" accept="image/*">
+                        <button class="action-btn upload-btn upload-img-btn" data-input="file-avatar" data-slider="avatar-url">Загрузить новую</button>
+                        <div class="image-preview" id="preview-avatar" style="min-height: auto;"></div>
+                    </div>
+                    <div class="form-group"><label>Заголовок (H1)</label><input type="text" id="hero-title"></div>
+                    <div class="form-group"><label>Описание</label><input type="text" id="hero-desc"></div>
+                    <div class="form-group"><label>Слоган</label><input type="text" id="hero-slogan"></div>
+                </div>
+            </section>
+
+            <!-- 2. КАРУСЕЛИ -->
+            <section id="tab-carousels" class="tab-pane">
+                <div class="grid-2" style="margin-bottom: 25px;">
+                    <!-- C1 -->
+                    <div class="form-card" style="margin-bottom: 0;">
+                        <div class="form-group"><label>Карусель 1: Заголовок</label><textarea id="title-s1" rows="2"></textarea></div>
+                        <div class="form-group" style="border-top: 1px solid var(--border-color); padding-top: 20px;">
+                            <label>Фотографии (Порядок на сайте зависит от порядка выбора файлов)</label>
+                            <input type="file" id="file-s1" multiple accept="image/*">
+                            <button class="action-btn upload-btn upload-img-btn" data-input="file-s1" data-slider="carousel1">Загрузить фото</button>
+                        <div style="margin-top: 15px; display: flex; gap: 10px;">
+                            <input type="text" id="link-s1" placeholder="Ссылка на YouTube, Rutube или .mp4" style="flex:1; padding: 10px; font-size: 13px;">
+                            <button class="action-btn upload-btn" onclick="addVideoLink('preview-s1', 'link-s1')" style="background: transparent; border: 1px solid var(--gold); color: var(--gold);">Добавить видео</button>
+                        </div>
+                            <div class="image-preview" id="preview-s1"></div>
+                        </div>
+                    </div>
+                    <!-- C2 -->
+                    <div class="form-card" style="margin-bottom: 0;">
+                        <div class="form-group"><label>Карусель 2: Заголовок</label><textarea id="title-s2" rows="2"></textarea></div>
+                        <div class="form-group" style="border-top: 1px solid var(--border-color); padding-top: 20px;">
+                            <label>Фотографии</label>
+                            <input type="file" id="file-s2" multiple accept="image/*">
+                            <button class="action-btn upload-btn upload-img-btn" data-input="file-s2" data-slider="carousel2">Загрузить фото</button>
+                        <div style="margin-top: 15px; display: flex; gap: 10px;">
+                            <input type="text" id="link-s2" placeholder="Ссылка на YouTube, Rutube или .mp4" style="flex:1; padding: 10px; font-size: 13px;">
+                            <button class="action-btn upload-btn" onclick="addVideoLink('preview-s2', 'link-s2')" style="background: transparent; border: 1px solid var(--gold); color: var(--gold);">Добавить видео</button>
+                        </div>
+                            <div class="image-preview" id="preview-s2"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- C3 -->
+                <div class="form-card">
+                    <div class="form-group"><label>Карусель 3: Заголовок</label><textarea id="title-s3" rows="2"></textarea></div>
+                    <div class="form-group" style="border-top: 1px solid var(--border-color); padding-top: 20px;">
+                        <label>Фотографии</label>
+                        <input type="file" id="file-s3" multiple accept="image/*">
+                        <button class="action-btn upload-btn upload-img-btn" data-input="file-s3" data-slider="carousel3">Загрузить фото</button>
+                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                        <input type="text" id="link-s3" placeholder="Ссылка на YouTube, Rutube или .mp4" style="flex:1; padding: 10px; font-size: 13px;">
+                        <button class="action-btn upload-btn" onclick="addVideoLink('preview-s3', 'link-s3')" style="background: transparent; border: 1px solid var(--gold); color: var(--gold);">Добавить видео</button>
+                    </div>
+                        <div class="image-preview" id="preview-s3"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. СЛУЖБА ЗАБОТЫ -->
+            <section id="tab-care" class="tab-pane">
+                <div class="form-card">
+                    <div class="form-group"><label>Заголовок блока</label><input type="text" id="care-title"></div>
+                    <div class="form-group"><label>Описание (Пункт 1)</label><input type="text" id="care-f1"></div>
+                    <div class="form-group"><label>Описание (Пункт 2)</label><input type="text" id="care-f2"></div>
+                    <div class="form-group"><label>Описание (Пункт 3)</label><input type="text" id="care-f3"></div>
+                    <div class="form-group" style="border-top: 1px solid var(--border-color); padding-top: 20px;">
+                        <label>Текст перед кнопкой</label><textarea id="care-cta" rows="2"></textarea>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group"><label>Текст на кнопке</label><input type="text" id="care-btn-text"></div>
+                        <div class="form-group"><label>Ссылка при нажатии</label><input type="text" id="care-link"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. СОТРУДНИЧЕСТВО -->
+            <section id="tab-coop" class="tab-pane">
+                <div class="form-card"><div class="form-group"><label>Заголовок блока</label><input type="text" id="coop-title"></div></div>
+                <div class="grid-cards" style="margin-bottom: 25px;">
+                    <div class="mini-card" draggable="true"><div class="card-header"><strong style="color:var(--gold);">Позиция 1</strong><span class="drag-handle">☰</span></div><label>Название</label><input type="text" id="coop1-n"><label style="margin-top:10px;">Описание</label><textarea id="coop1-d" rows="2"></textarea></div>
+                    <div class="mini-card" draggable="true"><div class="card-header"><strong style="color:var(--gold);">Позиция 2</strong><span class="drag-handle">☰</span></div><label>Название</label><input type="text" id="coop2-n"><label style="margin-top:10px;">Описание</label><textarea id="coop2-d" rows="2"></textarea></div>
+                    <div class="mini-card" draggable="true"><div class="card-header"><strong style="color:var(--gold);">Позиция 3</strong><span class="drag-handle">☰</span></div><label>Название</label><input type="text" id="coop3-n"><label style="margin-top:10px;">Описание</label><textarea id="coop3-d" rows="2"></textarea></div>
+                    <div class="mini-card" draggable="true"><div class="card-header"><strong style="color:var(--gold);">Позиция 4</strong><span class="drag-handle">☰</span></div><label>Название</label><input type="text" id="coop4-n"><label style="margin-top:10px;">Описание</label><textarea id="coop4-d" rows="2"></textarea></div>
+                    <div class="mini-card" draggable="true"><div class="card-header"><strong style="color:var(--gold);">Позиция 5</strong><span class="drag-handle">☰</span></div><label>Название</label><input type="text" id="coop5-n"><label style="margin-top:10px;">Описание</label><textarea id="coop5-d" rows="2"></textarea></div>
+                    <div class="mini-card" draggable="true"><div class="card-header"><strong style="color:var(--gold);">Позиция 6</strong><span class="drag-handle">☰</span></div><label>Название</label><input type="text" id="coop6-n"><label style="margin-top:10px;">Описание</label><textarea id="coop6-d" rows="2"></textarea></div>
+                </div>
+            </section>
+
+            <!-- 5. ПАРТНЕРЫ -->
+            <section id="tab-partners" class="tab-pane">
+                <div class="form-card"><div class="form-group"><label>Заголовок блока</label><input type="text" id="part-title"></div></div>
+                <div class="grid-cards" style="margin-bottom: 25px;">
+                    <div class="mini-card" draggable="true"><div class="card-header"><strong style="color:var(--gold);">Партнер 1</strong><span class="drag-handle">☰</span></div><label>Имя</label><input type="text" id="p1-n"><label style="margin-top:10px;">Описание</label><textarea id="p1-d" rows="2"></textarea><label style="margin-top:10px;">Ссылка (необязательно)</label><input type="text" id="p1-l"></div>
+                    <div class="mini-card" draggable="true"><div class="card-header"><strong style="color:var(--gold);">Партнер 2</strong><span class="drag-handle">☰</span></div><label>Имя</label><input type="text" id="p2-n"><label style="margin-top:10px;">Описание</label><textarea id="p2-d" rows="2"></textarea><label style="margin-top:10px;">Ссылка (необязательно)</label><input type="text" id="p2-l"></div>
+                    <div class="mini-card" draggable="true"><div class="card-header"><strong style="color:var(--gold);">Партнер 3</strong><span class="drag-handle">☰</span></div><label>Имя</label><input type="text" id="p3-n"><label style="margin-top:10px;">Описание</label><textarea id="p3-d" rows="2"></textarea><label style="margin-top:10px;">Ссылка (необязательно)</label><input type="text" id="p3-l"></div>
+                    <div class="mini-card" draggable="true"><div class="card-header"><strong style="color:var(--gold);">Партнер 4</strong><span class="drag-handle">☰</span></div><label>Имя</label><input type="text" id="p4-n"><label style="margin-top:10px;">Описание</label><textarea id="p4-d" rows="2"></textarea><label style="margin-top:10px;">Ссылка (необязательно)</label><input type="text" id="p4-l"></div>
+                    <div class="mini-card" draggable="true"><div class="card-header"><strong style="color:var(--gold);">Партнер 5</strong><span class="drag-handle">☰</span></div><label>Имя</label><input type="text" id="p5-n"><label style="margin-top:10px;">Описание</label><textarea id="p5-d" rows="2"></textarea><label style="margin-top:10px;">Ссылка (необязательно)</label><input type="text" id="p5-l"></div>
+                    <div class="mini-card" draggable="true"><div class="card-header"><strong style="color:var(--gold);">Партнер 6</strong><span class="drag-handle">☰</span></div><label>Имя</label><input type="text" id="p6-n"><label style="margin-top:10px;">Описание</label><textarea id="p6-d" rows="2"></textarea><label style="margin-top:10px;">Ссылка (необязательно)</label><input type="text" id="p6-l"></div>
+                </div>
+            </section>
+
+            <!-- 6. ВОПРОСЫ И КОНТАКТЫ -->
+            <section id="tab-questions" class="tab-pane">
+                <div class="form-card">
+                    <div class="form-group"><label>Заголовок блока вопросов</label><input type="text" id="contact-title"></div>
+                    <div class="form-group"><label>Описание под заголовком</label><input type="text" id="contact-desc"></div>
+                    <div class="grid-2" style="border-top: 1px solid var(--border-color); padding-top: 20px; margin-top: 20px;">
+                        <div class="form-group"><label>Ссылка Telegram (Иконка)</label><input type="text" id="tg-link"></div>
+                        <div class="form-group"><label>Ссылка WhatsApp (Иконка)</label><input type="text" id="wa-link"></div>
+                    </div>
+                    <div class="grid-2" style="border-top: 1px solid var(--border-color); padding-top: 20px;">
+                        <div class="form-group"><label>Текст на кнопке связи</label><input type="text" id="contact-btn-text"></div>
+                        <div class="form-group"><label>Ссылка для кнопки</label><input type="text" id="phone-link"></div>
+                    </div>
+                    <div class="form-group" style="border-top: 1px solid var(--border-color); padding-top: 20px;">
+                        <label>Локация в самом низу сайта (Футер)</label><input type="text" id="location-text">
+                    </div>
+                </div>
+            </section>
+            </div>
+
+        </main>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBBUJaS5O2-w-IiRx6ViQhjwE4ZxyHqDXY",
+            authDomain: "kochi-art-web.firebaseapp.com",
+            projectId: "kochi-art-web",
+            storageBucket: "kochi-art-web.firebasestorage.app",
+            messagingSenderId: "136666014395",
+            appId: "1:136666014395:web:f30ea60b93405df8563f9e",
+            measurementId: "G-C6QZ6PLXWJ"
+        };
+
+        // ЛОГИКА ПЕРЕТАСКИВАНИЯ КАРТОЧЕК (DRAG & DROP)
+        const sortables = document.querySelectorAll('.grid-cards, .image-preview');
+        let draggedItem = null;
+
+        sortables.forEach(container => {
+            container.addEventListener('dragstart', (e) => {
+                const target = e.target.closest('.mini-card, .preview-wrapper');
+                if(target) {
+                    draggedItem = target;
+                    if(e.dataTransfer) {
+                        e.dataTransfer.effectAllowed = 'move';
+                        e.dataTransfer.setData('text/plain', target.dataset.src || target.src || 'card');
+                    }
+                    setTimeout(() => target.classList.add('dragging'), 0);
+                }
+            });
+
+            container.addEventListener('dragend', (e) => {
+                const target = e.target.closest('.mini-card, .preview-wrapper');
+                if(target) {
+                    target.classList.remove('dragging');
+                    draggedItem = null;
+                    if (container.classList.contains('grid-cards')) updateCardIds(container);
+                    markUnsaved();
+                }
+            });
+
+            container.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                const target = e.target.closest('.mini-card, .preview-wrapper');
+                if(target && target !== draggedItem && draggedItem) {
+                    const rect = target.getBoundingClientRect();
+                    const isAfter = (e.clientX - rect.left) > (rect.width / 2);
+                    container.insertBefore(draggedItem, isAfter ? target.nextSibling : target);
+                }
+            });
+        });
+
+        function updateCardIds(container) {
+            const cards = container.querySelectorAll('.mini-card');
+            cards.forEach((card, index) => {
+                const num = index + 1;
+                const header = card.querySelector('.card-header strong');
+                const nameInput = card.querySelector('input[id$="-n"]');
+                const descInput = card.querySelector('textarea[id$="-d"]');
+                const linkInput = card.querySelector('input[id$="-l"]');
+
+                if (nameInput && nameInput.id.startsWith('coop')) {
+                    header.textContent = `Позиция ${num}`;
+                    nameInput.id = `coop${num}-n`;
+                    descInput.id = `coop${num}-d`;
+                } else if (nameInput && nameInput.id.startsWith('p')) {
+                    header.textContent = `Партнер ${num}`;
+                    nameInput.id = `p${num}-n`;
+                    descInput.id = `p${num}-d`;
+                    if (linkInput) linkInput.id = `p${num}-l`;
+                }
+            });
+        }
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // АВТОРИЗАЦИЯ
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('dashboard-section').classList.remove('hidden');
+                loadAllData();
+            } else {
+                document.getElementById('login-section').classList.remove('hidden');
+                document.getElementById('dashboard-section').classList.add('hidden');
+            }
+        });
+
+        document.getElementById('login-btn').addEventListener('click', () => {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+            signInWithEmailAndPassword(auth, email, pass).catch(err => alert("Ошибка: " + err.message));
+        });
+        document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
+
+        // СИСТЕМА СТАТУСОВ
+        function markUnsaved() {
+            const status = document.getElementById('save-status');
+            if(status.textContent !== "Сохраняем...") {
+                status.textContent = "Есть несохраненные изменения";
+                status.style.color = "#949995";
+            }
+        }
+        document.querySelector('.main-content').addEventListener('input', markUnsaved);
+
+        // ТАБЫ
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-pane').forEach(c => c.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+                document.getElementById(e.currentTarget.dataset.target).classList.add('active');
+                document.getElementById('top-category-title').textContent = e.currentTarget.textContent;
+            });
+        });
+
+        // ЗАГРУЗКА ДАННЫХ
+        async function loadAllData() {
+            try {
+                const mainSnap = await getDoc(doc(db, "content", "main"));
+                const d = mainSnap.exists() ? mainSnap.data() : {};
+                const setV = (id, def) => { const el = document.getElementById(id); if(el) el.value = d[id] || def; };
+
+                if (d['avatar-url']) {
+                    document.getElementById('preview-avatar').innerHTML = `<img src="${d['avatar-url']}">`;
+                }
+
+                // Шапка
+                setV('hero-title', '高知 KOCHI•ART');
+                setV('hero-desc', 'прогрессивные ландшафты');
+                setV('hero-slogan', '«Вид из окна меняет сознание»');
+
+                // Карусели
+                setV('title-s1', 'ПРОЕКТИРОВАНИЕ\nЧАСТНЫХ И ОБЩЕСТВЕННЫХ\nПРОСТРАНСТВ');
+                setV('title-s2', 'БЛАГОУСТРОЙСТВО');
+                setV('title-s3', 'УХОД');
+
+                // Служба заботы
+                setV('care-title', 'СЛУЖБА ЗАБОТЫ');
+                setV('care-f1', 'мы всегда на связи: консультации, рекомендации');
+                setV('care-f2', 'срочные выезды');
+                setV('care-f3', 'приоритетное обслуживание садов постоянных клиентов');
+                setV('care-cta', 'Получите консультацию по\nвашему саду уже сейчас');
+                setV('care-btn-text', 'Получить консультацию');
+                setV('care-link', 'https://t.me/k_irina_dd');
+
+                // Сотрудничество
+                setV('coop-title', 'ПОРЯДОК СОТРУДНИЧЕСТВА');
+                setV('coop1-n', 'Бриф'); setV('coop1-d', 'Задачи, пожелания клиентов');
+                setV('coop2-n', 'Анализ объекта'); setV('coop2-d', 'Оценка потенциальной возможности благоустройства');
+                setV('coop3-n', 'Концепция'); setV('coop3-d', 'Пространственно-планировочное предложение в планах, схемах, визуализациях');
+                setV('coop4-n', 'Укрупненная смета'); setV('coop4-d', 'Примерный расчет материалов');
+                setV('coop5-n', 'Вынос проекта в натуру'); setV('coop5-d', 'Выбор подрядчиков и поставщиков. Детальная смета');
+                setV('coop6-n', 'Благоустройство'); setV('coop6-d', 'Планирование грунта, посадка растений, монтаж бордюров, отсыпка инертными материалами, укладка газона');
+
+                // Партнеры
+                setV('part-title', 'НАШИ ПАРТНЁРЫ');
+                setV('p1-n', 'ORGANICA'); setV('p1-d', 'Автоматические системы полива'); setV('p1-l', '');
+                setV('p2-n', 'Садовый центр Веры Глуховой'); setV('p2-d', 'Посадочный материал'); setV('p2-l', '');
+                setV('p3-n', 'Садовый центр Дизайн Флора'); setV('p3-d', 'Посадочный материал'); setV('p3-l', '');
+                setV('p4-n', 'Садовый центр Флора ДД'); setV('p4-d', 'Посадочный материал'); setV('p4-l', '');
+                setV('p5-n', 'МореКам'); setV('p5-d', 'Натуральный камень'); setV('p5-l', '');
+                setV('p6-n', 'SVETHOLL'); setV('p6-d', 'Интерьерное и экстерьерное освещение'); setV('p6-l', '');
+
+                // Контакты
+                setV('contact-title', 'ЕСТЬ ВОПРОСЫ?!');
+                setV('contact-desc', 'Мы всегда на связи и готовы обсудить ваш будущий сад');
+                setV('tg-link', 'https://t.me/k_irina_dd');
+                setV('wa-link', 'https://wa.me/79176158055');
+                setV('contact-btn-text', 'Позвонить');
+                setV('phone-link', 'tel:+79176158055');
+                setV('location-text', 'Ульяновская область');
+
+                const sliderSnap = await getDoc(doc(db, "content", "sliders"));
+                const s = sliderSnap.exists() ? sliderSnap.data() : {};
+                
+                renderPreview('preview-s1', s.carousel1);
+                renderPreview('preview-s2', s.carousel2);
+                renderPreview('preview-s3', s.carousel3);
+            } catch (err) {
+                console.error(err);
+                if(err.code === 'permission-denied') {
+                    alert("ВНИМАНИЕ: Ошибка прав доступа к БД (Firebase).");
+                }
+            }
+        }
+
+        function renderPreview(containerId, urlsArray) {
+            const container = document.getElementById(containerId);
+            if (urlsArray && urlsArray.length > 0) {
+                container.innerHTML = urlsArray.map(url => {
+                    let isVideo = url.includes('youtube') || url.includes('youtu.be') || url.includes('rutube') || url.match(/\.(mp4|webm)$/i);
+                    let innerHtml = '';
+                    if(isVideo) {
+                        let shortUrl = url.replace(/^https?:\/\/(www\.)?/, '');
+                        if(shortUrl.length > 25) shortUrl = shortUrl.substring(0, 22) + '...';
+                        innerHtml = `<div class="video-preview">Видео:<br>${shortUrl}</div>`;
+                    } else {
+                        innerHtml = `<img src="${url}">`;
+                    }
+                    return `<div class="preview-wrapper" draggable="true" data-src="${url}">
+                        ${innerHtml}
+                        <button type="button" class="delete-media-btn" onclick="this.parentElement.remove(); markUnsaved();" title="Удалить">&times;</button>
+                    </div>`;
+                }).join('');
+            } else {
+                container.innerHTML = '';
+            }
+        }
+
+        // ГЛОБАЛЬНОЕ СОХРАНЕНИЕ
+        window.saveAllData = async function() {
+            const btn = document.getElementById('global-save-btn');
+            const status = document.getElementById('save-status');
+            const originalText = btn.textContent;
+            btn.textContent = "Сохраняем...";
+            btn.disabled = true;
+            status.textContent = "Идет сохранение в базу...";
+            status.style.color = "var(--gold)";
+
+            const ids = [
+                'hero-title', 'hero-desc', 'hero-slogan', 'title-s1', 'title-s2', 'title-s3',
+                'care-title', 'care-f1', 'care-f2', 'care-f3', 'care-cta', 'care-btn-text', 'care-link',
+                'coop-title', 'coop1-n', 'coop1-d', 'coop2-n', 'coop2-d', 'coop3-n', 'coop3-d', 'coop4-n', 'coop4-d', 'coop5-n', 'coop5-d', 'coop6-n', 'coop6-d',
+                'part-title', 'p1-n', 'p1-d', 'p1-l', 'p2-n', 'p2-d', 'p2-l', 'p3-n', 'p3-d', 'p3-l', 'p4-n', 'p4-d', 'p4-l', 'p5-n', 'p5-d', 'p5-l', 'p6-n', 'p6-d', 'p6-l',
+                'contact-title', 'contact-desc', 'tg-link', 'wa-link', 'contact-btn-text', 'phone-link', 'location-text'
+            ];
+            
+            const getPhotos = (id) => {
+                const cont = document.getElementById(id);
+                return cont ? Array.from(cont.children).map(child => child.dataset.src || child.src).filter(Boolean) : [];
+            };
+
+            let mainData = { 'avatar-url': getPhotos('preview-avatar')[0] || '' };
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) mainData[id] = el.value;
+            });
+            
+            let slidersData = {
+                carousel1: getPhotos('preview-s1'),
+                carousel2: getPhotos('preview-s2'),
+                carousel3: getPhotos('preview-s3')
+            };
+
+            try {
+                await setDoc(doc(db, "content", "main"), mainData, { merge: true });
+                await setDoc(doc(db, "content", "sliders"), slidersData, { merge: true });
+                
+                const time = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+                status.textContent = "Сохранено в " + time;
+                status.style.color = "var(--gold)";
+            } catch (error) {
+                status.textContent = "Ошибка сохранения";
+                status.style.color = "#ff6b6b";
+                alert(error.message);
+            }
+            btn.textContent = originalText;
+            btn.disabled = false;
+        };
+
+        // ЗАГРУЗКА КАРТИНОК И АВАТАРА
+        document.querySelectorAll('.upload-img-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const button = e.currentTarget;
+                const inputId = button.dataset.input;
+                const sliderKey = button.dataset.slider;
+                const fileInput = document.getElementById(inputId);
+                const files = fileInput.files;
+                if (files.length === 0) return alert("Пожалуйста, выберите файлы для загрузки.");
+                
+                const originalText = button.textContent;
+                button.textContent = "Загружаем...";
+                button.disabled = true;
+                
+                try {
+                    const keySnap = await getDoc(doc(db, "settings", "secrets"));
+                    if (!keySnap.exists() || !keySnap.data().imgbb) {
+                        throw new Error("API ключ ImgBB не найден в базе данных Firebase!");
+                    }
+                    const imgbbApiKey = keySnap.data().imgbb;
+
+                    const urls = [];
+                    for (let file of files) {
+                        const formData = new FormData();
+                        formData.append('image', file);
+                        const response = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbApiKey}`, { method: 'POST', body: formData });
+                        const data = await response.json();
+                        if (data.success) urls.push(data.data.url);
+                        else throw new Error("Ошибка загрузки на сервер ImgBB");
+                    }
+                    
+                    // Добавляем картинки на экран без немедленного сохранения в базу
+                    const container = document.getElementById(inputId.replace('file-', 'preview-'));
+                    if(sliderKey === 'avatar-url') container.innerHTML = '';
+                    
+                    urls.forEach(url => {
+                        container.insertAdjacentHTML('beforeend', `<div class="preview-wrapper" draggable="true" data-src="${url}">
+                            <img src="${url}">
+                            <button type="button" class="delete-media-btn" onclick="this.parentElement.remove(); markUnsaved();" title="Удалить">&times;</button>
+                        </div>`);
+                    });
+
+                    fileInput.value = '';
+                    
+                    button.textContent = originalText;
+                    button.disabled = false;
+                    markUnsaved(); // Помечаем, что надо нажать "Сохранить все"
+                    document.getElementById('save-status').textContent = "Фото загружено. Нажмите Сохранить.";
+                    
+                } catch (err) { 
+                    button.textContent = originalText;
+                    button.disabled = false;
+                    alert("Ошибка: " + err.message); 
+                }
+            });
+        });
+
+        window.addVideoLink = function(containerId, inputId) {
+            const input = document.getElementById(inputId);
+            let url = input.value.trim();
+            if(!url) return alert('Введите ссылку на видео');
+            if(!url.startsWith('http')) url = 'https://' + url;
+            
+            const container = document.getElementById(containerId);
+            let shortUrl = url.replace(/^https?:\/\/(www\.)?/, '');
+            if(shortUrl.length > 25) shortUrl = shortUrl.substring(0, 22) + '...';
+            
+            container.insertAdjacentHTML('beforeend', `<div class="preview-wrapper" draggable="true" data-src="${url}">
+                <div class="video-preview">Видео:<br>${shortUrl}</div>
+                <button type="button" class="delete-media-btn" onclick="this.parentElement.remove(); markUnsaved();" title="Удалить">&times;</button>
+            </div>`);
+            input.value = '';
+            markUnsaved();
+        };
+    </script>
+</body>
+</html>

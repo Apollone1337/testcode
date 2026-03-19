@@ -303,103 +303,132 @@
             });
         }
 
+        // Функция применения текстов на сайт (вынесена отдельно для кеша)
+        function applyMainData(md) {
+            const setHTML = (sel, id) => { const el = document.querySelector(sel); if(el && md[id]) el.innerHTML = md[id].replace(/\n/g, '<br>'); };
+            const setText = (sel, id) => { const el = document.querySelector(sel); if(el && md[id]) el.textContent = md[id]; };
+            const setHref = (sel, id) => { const el = document.querySelector(sel); if(el && md[id]) el.href = md[id]; };
+            const setAll = (sel, ids) => { const els = document.querySelectorAll(sel); els.forEach((el, i) => { if(md[ids[i]]) el.textContent = md[ids[i]]; }); };
+            
+            if (md['avatar-url']) { 
+                const av = document.getElementById('main-avatar'); 
+                if(av) { av.src = md['avatar-url']; av.style.display = 'block'; }
+            }
+            if (md['favicon-url']) {
+                let link = document.querySelector("link[rel~='icon']");
+                if (!link) {
+                    link = document.createElement('link');
+                    link.rel = 'icon';
+                    document.head.appendChild(link);
+                }
+                link.href = md['favicon-url'];
+            }
+
+            // Главный экран и Слайдеры
+            setHTML('.main-title', 'hero-title');
+            setText('.description', 'hero-desc');
+            setText('.slogan', 'hero-slogan');
+
+            const titles = document.querySelectorAll('.block-title');
+            if (md['title-s1'] && titles[0]) titles[0].innerHTML = md['title-s1'].replace(/\n/g, '<br>');
+            if (md['title-s2'] && titles[1]) titles[1].innerHTML = md['title-s2'].replace(/\n/g, '<br>');
+            if (md['title-s3'] && titles[2]) titles[2].innerHTML = md['title-s3'].replace(/\n/g, '<br>');
+
+            // Служба заботы
+            setText('.care-title', 'care-title');
+            setAll('.care-feature', ['care-f1', 'care-f2', 'care-f3']);
+            setHTML('.care-cta-text', 'care-cta');
+            setHref('.care-cta-button', 'care-link');
+            if(md['care-btn-text']) { const btn = document.querySelector('.care-cta-button'); if(btn) btn.textContent = md['care-btn-text']; }
+
+            // Сотрудничество
+            setText('.cooperation-title', 'coop-title');
+            setAll('.coop-name', ['coop1-n', 'coop2-n', 'coop3-n', 'coop4-n', 'coop5-n', 'coop6-n']);
+            setAll('.coop-desc', ['coop1-d', 'coop2-d', 'coop3-d', 'coop4-d', 'coop5-d', 'coop6-d']);
+
+            // Партнеры
+            setText('.partners-title', 'part-title');
+            setAll('.partner-name', ['p1-n', 'p2-n', 'p3-n', 'p4-n', 'p5-n', 'p6-n']);
+            setAll('.partner-desc', ['p1-d', 'p2-d', 'p3-d', 'p4-d', 'p5-d', 'p6-d']);
+            const pItems = document.querySelectorAll('.partner-item');
+            for(let i=1; i<=6; i++) {
+                if (md[`p${i}-l`] && pItems[i-1]) {
+                    pItems[i-1].style.cursor = 'pointer';
+                    pItems[i-1].onclick = () => {
+                        let url = md[`p${i}-l`];
+                        if (!url.startsWith('http://') && !url.startsWith('https://')) url = 'https://' + url;
+                        window.open(url, '_blank');
+                    };
+                    pItems[i-1].title = "Перейти на сайт партнера";
+                }
+            }
+
+            // Контакты
+            setText('.questions-title', 'contact-title');
+            setText('.answer-text', 'contact-desc');
+            const messengers = document.querySelectorAll('.messenger-btn');
+            if(md['tg-link'] && messengers[0]) messengers[0].href = md['tg-link'];
+            if(md['wa-link'] && messengers[1]) messengers[1].href = md['wa-link'];
+            setHref('.call-button', 'phone-link');
+            if(md['contact-btn-text']) { const btn = document.querySelector('.call-button'); if(btn) btn.textContent = md['contact-btn-text']; }
+            setText('.footer-location span', 'location-text');
+        }
+
+        // Функция применения картинок (вынесена отдельно)
+        function applySlidersData(data) {
+            loadSliderImages('.mySwiper', data.carousel1 || []);
+            loadSliderImages('.mySwiper2', data.carousel2 || []);
+            loadSliderImages('.mySwiper3', data.carousel3 || []);
+        }
+
         // Главная функция: забирает данные и рисует сайт
         async function renderSiteContent() {
             const app = initializeApp(firebaseConfig);
             const db = getFirestore(app);
+            
+            // 1. Пытаемся мгновенно загрузить сайт из памяти браузера (Кеша)
+            const cachedMain = localStorage.getItem('site_main_cache');
+            const cachedSliders = localStorage.getItem('site_sliders_cache');
+            let isSwiperInit = false;
+
+            if (cachedMain && cachedSliders) {
+                try {
+                    applyMainData(JSON.parse(cachedMain));
+                    applySlidersData(JSON.parse(cachedSliders));
+                    initSwipers();
+                    isSwiperInit = true;
+                } catch(e) { console.error("Ошибка чтения кеша", e); }
+            }
 
             try {
-                // Подтягиваем новые тексты из админки
                 const mainSnap = await getDoc(doc(db, "content", "main"));
-                if (mainSnap.exists()) {
-                    const md = mainSnap.data();
-                    
-                    // Функции-помощники для безопасной подстановки данных
-                    const setHTML = (sel, id) => { const el = document.querySelector(sel); if(el && md[id]) el.innerHTML = md[id].replace(/\n/g, '<br>'); };
-                    const setText = (sel, id) => { const el = document.querySelector(sel); if(el && md[id]) el.textContent = md[id]; };
-                    const setHref = (sel, id) => { const el = document.querySelector(sel); if(el && md[id]) el.href = md[id]; };
-                    const setAll = (sel, ids) => { const els = document.querySelectorAll(sel); els.forEach((el, i) => { if(md[ids[i]]) el.textContent = md[ids[i]]; }); };
-                    if (md['avatar-url']) { 
-                        const av = document.getElementById('main-avatar'); 
-                        if(av) { av.src = md['avatar-url']; av.style.display = 'block'; }
-                    }
-                    if (md['favicon-url']) {
-                        let link = document.querySelector("link[rel~='icon']");
-                        if (!link) {
-                            link = document.createElement('link');
-                            link.rel = 'icon';
-                            document.head.appendChild(link);
-                        }
-                        link.href = md['favicon-url'];
-                    }
-
-                    // Главный экран и Слайдеры
-                    setHTML('.main-title', 'hero-title');
-                    setText('.description', 'hero-desc');
-                    setText('.slogan', 'hero-slogan');
-
-                    const titles = document.querySelectorAll('.block-title');
-                    if (md['title-s1'] && titles[0]) titles[0].innerHTML = md['title-s1'].replace(/\n/g, '<br>');
-                    if (md['title-s2'] && titles[1]) titles[1].innerHTML = md['title-s2'].replace(/\n/g, '<br>');
-                    if (md['title-s3'] && titles[2]) titles[2].innerHTML = md['title-s3'].replace(/\n/g, '<br>');
-
-                    // Служба заботы
-                    setText('.care-title', 'care-title');
-                    setAll('.care-feature', ['care-f1', 'care-f2', 'care-f3']);
-                    setHTML('.care-cta-text', 'care-cta');
-                    setHref('.care-cta-button', 'care-link');
-                    if(md['care-btn-text']) document.querySelector('.care-cta-button').textContent = md['care-btn-text'];
-
-                    // Сотрудничество
-                    setText('.cooperation-title', 'coop-title');
-                    setAll('.coop-name', ['coop1-n', 'coop2-n', 'coop3-n', 'coop4-n', 'coop5-n', 'coop6-n']);
-                    setAll('.coop-desc', ['coop1-d', 'coop2-d', 'coop3-d', 'coop4-d', 'coop5-d', 'coop6-d']);
-
-                    // Партнеры
-                    setText('.partners-title', 'part-title');
-                    setAll('.partner-name', ['p1-n', 'p2-n', 'p3-n', 'p4-n', 'p5-n', 'p6-n']);
-                    setAll('.partner-desc', ['p1-d', 'p2-d', 'p3-d', 'p4-d', 'p5-d', 'p6-d']);
-                    const pItems = document.querySelectorAll('.partner-item');
-                    for(let i=1; i<=6; i++) {
-                        if (md[`p${i}-l`] && pItems[i-1]) {
-                            pItems[i-1].style.cursor = 'pointer';
-                            pItems[i-1].onclick = () => {
-                                let url = md[`p${i}-l`];
-                                if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                                    url = 'https://' + url;
-                                }
-                                window.open(url, '_blank');
-                            };
-                            pItems[i-1].title = "Перейти на сайт партнера";
-                        }
-                    }
-
-                    // Контакты
-                    setText('.questions-title', 'contact-title');
-                    setText('.answer-text', 'contact-desc');
-                    const messengers = document.querySelectorAll('.messenger-btn');
-                    if(md['tg-link'] && messengers[0]) messengers[0].href = md['tg-link'];
-                    if(md['wa-link'] && messengers[1]) messengers[1].href = md['wa-link'];
-                    setHref('.call-button', 'phone-link');
-                    if(md['contact-btn-text']) document.querySelector('.call-button').textContent = md['contact-btn-text'];
-                    setText('.footer-location span', 'location-text');
-                }
-
-                // Подтягиваем картинки
                 const docSnap = await getDoc(doc(db, "content", "sliders"));
-                const data = docSnap.exists() ? docSnap.data() : {};
                 
-                const carousel1 = data.carousel1 || [];
-                const carousel2 = data.carousel2 || [];
-                const carousel3 = data.carousel3 || [];
+                if (mainSnap.exists() && docSnap.exists()) {
+                    const md = mainSnap.data();
+                    const sd = docSnap.data();
+                    const freshMainStr = JSON.stringify(md);
+                    const freshSlidersStr = JSON.stringify(sd);
 
-                loadSliderImages('.mySwiper', carousel1);
-                loadSliderImages('.mySwiper2', carousel2);
-                loadSliderImages('.mySwiper3', carousel3);
+                    if (freshMainStr !== cachedMain || freshSlidersStr !== cachedSliders) {
+                        localStorage.setItem('site_main_cache', freshMainStr);
+                        localStorage.setItem('site_sliders_cache', freshSlidersStr);
+
+                        applyMainData(md);
+                        applySlidersData(sd);
+
+                        if (!isSwiperInit) {
+                            initSwipers();
+                            isSwiperInit = true;
+                        } else {
+                            document.querySelectorAll('.swiper').forEach(el => el.swiper && el.swiper.update());
+                        }
+                    }
+                }
             } catch (error) {
                 console.error("Не удалось загрузить данные из базы, показываю оффлайн версию.", error);
             } finally {
-                initSwipers(); // Обязательно инициализируем свайпер после загрузки
+                if (!isSwiperInit) initSwipers();
             }
         }
         
